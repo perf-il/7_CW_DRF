@@ -8,10 +8,15 @@ NULLABLE = {'blank': True, 'null': True}
 class User(AbstractUser):
     username = None
     email = models.EmailField(verbose_name='E-mail', unique=True)
-    phone = models.CharField(max_length=35, verbose_name='Номер телефона', **NULLABLE)
-    avatar = models.ImageField(upload_to='user_avatar/', verbose_name='Аватар', **NULLABLE)
-    city = models.CharField(max_length=50, verbose_name='город', **NULLABLE)
-    is_active = models.BooleanField(default=False, verbose_name='активный пользователь')
+    tg_user_name = models.CharField(max_length=150, verbose_name='username в ТГ')
+    tg_user_id = models.CharField(max_length=150, verbose_name='user_id в ТГ', **NULLABLE)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
+
+    def __str__(self):
+        return self.tg_user_name
