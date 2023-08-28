@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -20,11 +19,13 @@ class HabitViewSet(viewsets.ModelViewSet):
         new_habit.save()
 
     def list(self, request, *args, **kwargs):
-        #  проверка пользователя: администратор видит все привычки, остальные только публичные и свои
+        #  проверка пользователя: администратор видит все привычки,
+        #  остальные только публичные и свои
         if self.request.user.is_superuser:
             queryset = Habit.objects.all()
         else:
-            queryset = Habit.objects.filter(is_public=True) | Habit.objects.filter(user=self.request.user.pk)
+            queryset = Habit.objects.filter(is_public=True) | \
+                       Habit.objects.filter(user=self.request.user.pk)
 
         page = self.paginate_queryset(queryset)
         if page is not None:

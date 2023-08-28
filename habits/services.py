@@ -1,24 +1,39 @@
 import requests
 
-from users.models import User
+from config.settings import TELEGRAM_BOT_TOKEN
 
-URL = 'https://api.telegram.org/bot6608247362:AAEttN7EpjQ02hdVGE7z3jTi97BzWBZfLzQ/'
+URL = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/'
 
 
-def ping_bot():
+def get_all_users_bot():
     method = 'getUpdates'
     response = requests.get(URL + method)
-    id_users = set()
+    print(response.json())
+    all_users = list()
+    id_users = list()
     for result in response.json().get('result'):
-        chat_id = result['message']['from']['id']
-        id_users.add(chat_id)
-        # answer = requests.get(URL + f'sendMessage?chat_id={chat_id}&text=привет')
-    for id_user in id_users:
-        if not User.objects.filter(tg_user_id=id_user).exists():
-            pass
+        user_id = result['message']['from']['id']
+        user_first_name = result['message']['from']['first_name']
+        user_last_name = result['message']['from']['last_name']
+        user_name = result['message']['from']['username']
+        if user_id not in id_users:
+            id_users.append(user_id)
+            all_users.append({
+                'id': user_id,
+                'first_name': user_first_name,
+                'last_name': user_last_name,
+                'username': user_name,
+            })
 
-    # return response.json().get('result')
-    return id_users
+    return all_users
 
 
-print(ping_bot())
+def send_message_bot(chat_id, text):
+    method = 'sendMessage'
+    url = URL + method
+    params = {
+        'chat_id': chat_id,
+        'text': text,
+    }
+    answer = requests.get(url, params=params)
+    return answer.json().get('ok')

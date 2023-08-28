@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import TextChoices
 
 from users.models import NULLABLE, User
 
@@ -21,4 +20,4 @@ class Habit(models.Model):
         verbose_name_plural = 'привычки'
 
     def __str__(self):
-        return f'я буду {self.action} в {self.time} в {self.location}'
+        return f'я буду {self.action} в {self.time.time()} в {self.location}'

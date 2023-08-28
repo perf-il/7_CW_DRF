@@ -8,7 +8,7 @@ NULLABLE = {'blank': True, 'null': True}
 class User(AbstractUser):
     username = None
     email = models.EmailField(verbose_name='E-mail', unique=True)
-    tg_user_name = models.CharField(max_length=150, verbose_name='username в ТГ')
+    tg_user_name = models.CharField(max_length=150, verbose_name='username в ТГ', **NULLABLE)
     tg_user_id = models.CharField(max_length=150, verbose_name='user_id в ТГ', **NULLABLE)
 
     USERNAME_FIELD = "email"
